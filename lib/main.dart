@@ -29,14 +29,14 @@ Future<void> main() async {
   //   blocObserver: SimpleBlocObserver(),
   // );
 
-  BlocOverrides.runZoned(
-    () {
-      CounterBloc()
-        ..add(CounterIncrementPressed())
-        ..close();
-    },
-    blocObserver: SimpleBlocObserver(),
-  );
+  // BlocOverrides.runZoned(
+  //   () {
+  //     CounterBloc()
+  //       ..add(CounterIncrementPressed())
+  //       ..close();
+  //   },
+  //   blocObserver: SimpleBlocObserver(),
+  // );
 
   // final subscription = bloc.stream.listen(print);
   //
@@ -91,55 +91,53 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CounterBloc(),
-      child: CounterPage(context),
-    );
-  }
-
-  Scaffold CounterPage(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: BlocBuilder(builder: (context, _counter) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'You have pushed the button this many times:',
+      create: (_) => CounterBloc(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: BlocBuilder<CounterBloc, int>(
+          builder: (context, _counter) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    'You have pushed the button this many times:',
+                  ),
+                  Text(
+                    '$_counter',
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ],
               ),
-              Text(
-                '$_counter',
-                style: Theme.of(context).textTheme.headline4,
+            );
+          },
+        ),
+        floatingActionButton: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  context.read<CounterBloc>().add(CounterIncrementPressed());
+                },
+                tooltip: 'Increment',
+                child: const Icon(Icons.add),
               ),
-            ],
-          ),
-        );
-      }),
-      floatingActionButton: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                context.read<CounterBloc>().add(CounterIncrementPressed());
-              },
-              tooltip: 'Increment',
-              child: const Icon(Icons.add),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton(
-              onPressed: () {
-                context.read()<CounterBloc>().add(CounterIncrementPressed());
-              },
-              tooltip: 'Increment',
-              child: const Icon(Icons.add),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  context.read()<CounterBloc>().add(CounterDecrementPressed());
+                },
+                tooltip: 'Decrement',
+                child: const Icon(Icons.remove),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
